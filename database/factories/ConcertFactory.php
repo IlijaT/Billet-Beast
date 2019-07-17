@@ -20,3 +20,12 @@ $factory->define(Concert::class, function (Faker $faker) {
         'additional_information' => 'Some sample additinal information',
     ];
 });
+
+$factory->state(Concert::class, 'published', function ($faker) {
+    return [ 'published_at' => Carbon::now() ];
+});
+
+$factory->state(Concert::class, 'unpublished', function ($faker) {
+    return [ 'published_at' => null ];
+});
+

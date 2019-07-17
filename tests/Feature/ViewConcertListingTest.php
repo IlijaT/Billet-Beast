@@ -13,12 +13,10 @@ class ExampleTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_user_ca_view_concert_listing()
+    public function a_user_can_view_a_published_concert_listing()
     {
-        $this->withoutExceptionHandling();
-        // Arrange
-        // Create a concert
-        $concert = Concert::create([
+
+        $concert = factory(Concert::class)->states('published')->create([
             'title' => 'The Red Chord',
             'subtitle' => 'With Animosity and Lethargy',
             'date'  => Carbon::parse('August 13th, 2019, 8:00pm'),
@@ -31,14 +29,8 @@ class ExampleTest extends TestCase
             'additional_information' => 'For tickets call +381642233444',
         ]);
 
-        // Act
-        // View the concert listings 
         $response = $this->get('/concerts/'. $concert->id);
 
-
-
-        // Assert
-        // See the concert details
         $response->assertSee('The Red Chord');
         $response->assertSee('With Animosity and Lethargy');
         $response->assertSee('August 13, 2019');
@@ -51,6 +43,17 @@ class ExampleTest extends TestCase
         $response->assertSee('21000');
         $response->assertSee('For tickets call +381642233444');
 
+    }
+
+    /** @test */
+    public function a_user_cannot_view_unpublished_concert_listing()
+    {
+        
+        $concert = factory(Concert::class)->states('unpublished')->create();
+
+        $response = $this->get('/concerts/'. $concert->id);
+
+        $response->assertStatus(404);
 
     }
 }
