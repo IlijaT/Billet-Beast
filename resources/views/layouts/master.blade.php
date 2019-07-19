@@ -10,7 +10,8 @@
     <title>{{ config('app.name', 'BilletBeast') }}: @yield('title')</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    @include('scripts.app')
+    
     
 
     <!-- Fonts -->
@@ -39,5 +40,8 @@
 
     </div> 
     @include('layouts.footer')
+    @stack('beforeScripts')
+      <script src="{{ asset('js/app.js') }}" defer></script>
+    @stack('afterScripts')
   </body>
 </html>
