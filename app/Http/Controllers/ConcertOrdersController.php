@@ -19,7 +19,9 @@ class ConcertOrdersController extends Controller
     public function store(Concert $concert)
     {
         request()->validate([
-            'email' => 'required'
+            'email' => 'required|email',
+            'ticket_quantity' => 'required|numeric|min:1',
+            'payment_token' => 'required',
         ]);
 
         // Charging customer
@@ -30,4 +32,5 @@ class ConcertOrdersController extends Controller
 
         return response()->json([], 201);
     }
+    
 }
