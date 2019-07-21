@@ -17,8 +17,10 @@ class ConcertOrdersController extends Controller
         $this->paymentGateway = $paymentGateway;
     }
 
-    public function store(Concert $concert)
+    public function store( $concert_id)
     {
+        $concert = Concert::published()->findOrFail($concert_id);
+        
         request()->validate([
             'email' => 'required|email',
             'ticket_quantity' => 'required|integer|min:1',
@@ -26,7 +28,6 @@ class ConcertOrdersController extends Controller
         ]);
 
         try {
-            
             // Charging customer
             $this->paymentGateway->charge(request('ticket_quantity') * $concert->ticket_price, request('payment_token'));
             // Creating order
