@@ -20,7 +20,7 @@ class ConcertOrdersController extends Controller
     {
         request()->validate([
             'email' => 'required|email',
-            'ticket_quantity' => 'required|numeric|min:1',
+            'ticket_quantity' => 'required|integer|min:1',
             'payment_token' => 'required',
         ]);
 
