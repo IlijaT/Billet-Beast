@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('concert_id');
             $table->string('email');
+            $table->integer('amount');
             $table->timestamps();
         });
     }
@@ -26,7 +27,7 @@ class CreateOrdersTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down() 
     {
         Schema::dropIfExists('orders');
     }
