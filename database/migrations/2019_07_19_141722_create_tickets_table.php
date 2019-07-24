@@ -17,6 +17,7 @@ class CreateTicketsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('concert_id');
             $table->unsignedInteger('order_id')->nullable();
+            $table->dateTime('reserved_at')->nullable();
             $table->timestamps();
         });
     }
