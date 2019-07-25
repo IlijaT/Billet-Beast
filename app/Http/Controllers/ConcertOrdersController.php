@@ -22,6 +22,7 @@ class ConcertOrdersController extends Controller
 
     public function store( $concert_id)
     {
+       
         $concert = Concert::published()->findOrFail($concert_id);
         
         request()->validate([

@@ -24,7 +24,11 @@ class PurchaseTicketsTest extends TestCase
 
     private function orderTickets($concert, $params)
     {
-        return $this->json('POST', "/concerts/{$concert->id}/orders",  $params);
+        $savedRequest = $this->app['request'];
+        $response = $this->json('POST', "/concerts/{$concert->id}/orders",  $params);
+        $this->app['request'] = $savedRequest;
+
+        return $response;
     }
 
     private function assertValidationError($response, $field)
@@ -36,8 +40,6 @@ class PurchaseTicketsTest extends TestCase
 	/** @test */
     public function a_customer_can_purchase_tickets_to_a_published_concert()
     {
-
-        $this->withoutExceptionHandling();
 
         $concert = factory(Concert::class)->states('published')->create([
             'ticket_price' => 3250
@@ -122,19 +124,19 @@ class PurchaseTicketsTest extends TestCase
                                     // Atempt to charge Person B
         // Atempt to charge Person A
         // Atempt to charge Person A
-        $this->withoutExceptionHandling();
 
         $concert = factory(Concert::class)->states('published')->create([
             'ticket_price' => 1200
         ])->addTickets(3);
 
         $this->paymentGateway->beforeFirstCharge(function($paymentGateway) use($concert) {
+
             $responseB = $this->orderTickets($concert, [
                 'email' => 'personB@example.com',
                 'ticket_quantity' => 1,
                 'payment_token'=> $this->paymentGateway->getValidTestToken()
-            ]);
-
+                ]);
+            
             $responseB->assertStatus(422);
             $this->assertFalse($concert->hasOrderFor('personB@example.com'));
             $this->assertEquals(0, $this->paymentGateway->totalCharges());
