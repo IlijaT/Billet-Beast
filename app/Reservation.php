@@ -4,7 +4,7 @@ namespace App;
 
 class Reservation {
   
-  protected $tickets;
+  private $tickets;
 
   public function __construct($tickets)
   {
@@ -14,6 +14,11 @@ class Reservation {
   public function totalCost()
   {
     return $this->tickets->sum('price');
+  }
+  
+  public function tickets()
+  {
+    return $this->tickets;
   }
 
   public function cancel()
