@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Reservation;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Billing\FakePaymentGateway;
 
 class ReservationTest extends TestCase
 {
@@ -81,11 +82,13 @@ class ReservationTest extends TestCase
         $concert = factory(Concert::class)->create(['ticket_price' => 1200]);
         $tickets = factory(Ticket::class, 3)->create(['concert_id' => $concert->id]);
         $reservation = new Reservation($tickets, 'john@example.com');
+        $paymentGateway = new FakePaymentGateway;
 
-        $order = $reservation->complete();
+        $order = $reservation->complete($paymentGateway, $paymentGateway->getValidTestToken());
 
         $this->assertEquals('john@example.com', $order->email);
         $this->assertEquals(3, $order->ticketQuantity());
         $this->assertEquals(3600, $order->amount);
+        $this->assertEquals(3600, $paymentGateway->totalCharges());
    }
 }
