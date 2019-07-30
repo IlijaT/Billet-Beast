@@ -6,7 +6,11 @@ use Tests\TestCase;
 use App\Billing\StripePaymentGateway;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Billing\PaymentFailedException;
 
+/**
+ * @group integration
+ */
 class StripePaymentGatewayTest extends TestCase
 {
 
@@ -53,16 +57,27 @@ class StripePaymentGatewayTest extends TestCase
    public function charges_with_a_valid_payment_token_are_successful()
    {
 
-    // New PaymentGateway instance
-    $paymentGateway = new StripePaymentGateway(config('services.stripe.secret'));
+        $paymentGateway = new StripePaymentGateway(config('services.stripe.secret'));
 
-    // Create a new charge with a paymentGateWay valid token
-    $paymentGateway->charge(2500, $this->validToken());
+        $paymentGateway->charge(2500, $this->validToken());
 
-    // verity that the charge was created successfullly
-
-
-    $this->assertCount(1, $this->newCharges());
-    $this->assertEquals(2500, $this->lastCharge()->amount);
+        $this->assertCount(1, $this->newCharges());
+        $this->assertEquals(2500, $this->lastCharge()->amount);
    }
+
+    /** @test */
+    public function charges_with_invalid_payment_token_fail()
+    {
+        try {
+            $paymentGateway = new StripePaymentGateway(config('services.stripe.secret'));
+            $paymentGateway->charge(2500, 'invalid-payment-token');
+        } catch(PaymentFailedException $e) {
+            $this->assertCount(0, $this->newCharges());
+            // $this->assertEquals(0, $this->lastCharge()->amount);
+            return;
+        }
+
+        $this->fail('Charging with an invalid payment token did not throw PaymentFailedException');
+
+    }
 }
