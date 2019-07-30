@@ -1770,7 +1770,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     openStripe: function openStripe(callback) {
       this.stripeHandler.open({
-        name: 'TicketBeast',
+        name: 'BilletBeast',
         description: this.description,
         currency: "usd",
         allowRememberMe: false,
@@ -20002,7 +20002,7 @@ var render = function() {
       _c("div", { staticClass: "col col-xs-6" }, [
         _c("div", { staticClass: "form-group m-xs-b-4" }, [
           _c("label", { staticClass: "form-label" }, [
-            _vm._v("\n                    Qty\n                ")
+            _vm._v("\n                    Quantity\n                ")
           ]),
           _vm._v(" "),
           _c("input", {

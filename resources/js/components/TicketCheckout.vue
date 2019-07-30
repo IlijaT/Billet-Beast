@@ -75,7 +75,7 @@
             },
             openStripe(callback) {
                 this.stripeHandler.open({
-                    name: 'TicketBeast',
+                    name: 'BilletBeast',
                     description: this.description,
                     currency: "usd",
                     allowRememberMe: false,
