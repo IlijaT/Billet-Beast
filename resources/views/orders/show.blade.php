@@ -8,18 +8,18 @@
 				<div class="m-xs-b-6">
 					<div class="flex-baseline flex-spaced p-xs-y-4 border-b">
 						<h1 class="tex-xl">Order Summary</h1>
-						{{-- <a href="#" class="link-brand-soft">{{ $order->confirmation_number }}</a> --}}
+						<a href="#" class="link-brand-soft">{{ $order->confirmation_number }}</a>
 					</div>
 					<div class="p-xs-y-4 border-b">
 						<p>
-							{{-- <strong>Order Total: ${{ number_format($order->amount / 100, 2) }}</strong> --}}
+							<strong>Order Total: ${{ number_format($order->amount / 100, 2) }}</strong>
 						</p>
-						{{-- <p class="text-dark-soft">Billed to Card #: **** **** **** {{ $order->card_last_four }}</p> --}}
+						<p class="text-dark-soft">Billed to Card #: **** **** **** {{ $order->card_last_four }}</p>
 					</div>
 				</div>
 				<div class="m-xs-b-7">
 					<h2 class="text-lg wt-normal m-xs-b-4">Your Tickets</h2>
-					{{-- @foreach ($order->tickets as $ticket)						
+					@foreach ($order->tickets as $ticket)						
 						<div class="card m-xs-b-5">
 							<div class="card-section p-xs-y-3 flex-baseline flex-spaced text-light bg-gray">
 								<div>
@@ -66,10 +66,10 @@
 							</div>
 							<div class="card-section flex-baseline flex-spaced">
 								<p class="text-lg">{{ $ticket->code }}</p>
-								<p>{{ $ticket->order->email }}</p>
+								{{-- <p>{{ $ticket->order->email }}</p> --}}
 							</div>
 						</div>
-					@endforeach --}}
+					@endforeach
 				</div>
 				<div class="text-center text-dark-soft wt-medium">
 					<p>Powered by BilletBeast</p>
