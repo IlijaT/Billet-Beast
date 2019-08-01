@@ -17,7 +17,7 @@ class ViewOrderTest extends TestCase
     public function user_can_view_their_order_confirmation()
     {
         $this->withoutExceptionHandling();
-        
+
         $concert = factory(Concert::class)->create();
         $order = factory(Order::class)->create([
             'confirmation_number' => 'ORDERCONFIRMATION1234'
@@ -29,9 +29,10 @@ class ViewOrderTest extends TestCase
 
         // visit order view page 
         $response = $this->get("/orders/ORDERCONFIRMATION1234");
-
-        $response->assertStatus(200);
-
+        
         // assert see order details 
+        $response->assertStatus(200);
+        $response->assertViewHas('order', $order);
+
     }
 }
