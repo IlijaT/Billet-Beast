@@ -8,7 +8,7 @@
 				<div class="m-xs-b-6">
 					<div class="flex-baseline flex-spaced p-xs-y-4 border-b">
 						<h1 class="tex-xl">Order Summary</h1>
-						<a href="#" class="link-brand-soft">{{ $order->confirmation_number }}</a>
+					<a href="{{ url("/orders/{$order->confirmation_number}") }}" class="link-brand-soft">{{ $order->confirmation_number }}</a>
 					</div>
 					<div class="p-xs-y-4 border-b">
 						<p>
@@ -30,7 +30,7 @@
 									<strong>General Admission</strong>
 									<p class="text-light-soft">Admit One</p>
 								</div>
-							</div>
+							</div>o
 							<div class="card-section border-b">
 								<div class="row">
 									<div class="col-sm">

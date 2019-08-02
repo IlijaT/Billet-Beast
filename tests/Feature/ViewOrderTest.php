@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Concert;
 use App\Order;
 use App\Ticket;
+use Carbon\Carbon;
 
 class ViewOrderTest extends TestCase
 {
@@ -18,7 +19,10 @@ class ViewOrderTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $concert = factory(Concert::class)->create();
+        $concert = factory(Concert::class)->create([
+            'date' => Carbon::parse('2019-10-20 20:00')
+        ]);
+
         $order = factory(Order::class)->create([
             'confirmation_number' => 'ORDERCONFIRMATION1234',
             'amount' => 8500,
@@ -44,6 +48,15 @@ class ViewOrderTest extends TestCase
         $response->assertSee('**** **** **** 1881');
         $response->assertSee('TICKETCODE123');
         $response->assertSee('TICKETCODE456');
+        $response->assertSee('With Fake Openers');
+        $response->assertSee('The Example Theatre');
+        $response->assertSee('Example Street 123');
+        $response->assertSee('Fakeville');
+        $response->assertSee('Srbija');
+        $response->assertSee('21000');
+        // $response->assertSee('john@example.com');
+        $response->assertSee('2019-10-20 20:00');
+
 
     }
 }

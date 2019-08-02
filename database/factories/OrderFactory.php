@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Order::class, function (Faker $faker) {
     return [
-        'email' => 'somebody@example.com',
+        'email' => 'john@example.com',
         'amount' => 5250
     ];
 });
