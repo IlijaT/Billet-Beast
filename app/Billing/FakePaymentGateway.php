@@ -2,7 +2,10 @@
 
 namespace App\Billing;
 
-class FakePaymentGateway implements PaymentGateway{
+class FakePaymentGateway implements PaymentGateway
+{
+
+  const TEST_CARD_NUMBER = '4242424242424242';
 
   private $charges;
   private $tokens;
@@ -14,7 +17,7 @@ class FakePaymentGateway implements PaymentGateway{
     $this->tokens = collect();
   } 
   
-  public function getValidTestToken($cardNumber = '4242424242424242')
+  public function getValidTestToken($cardNumber = self::TEST_CARD_NUMBER)
   {
     $token = 'fake_tok'.str_random(24);
     $this->tokens[$token] = $cardNumber;
