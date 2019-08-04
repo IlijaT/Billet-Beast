@@ -9,6 +9,7 @@ use App\Billing\FakePaymentGateway;
 use App\OrderConfirmationNumberGenerator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Facades\OrderConfirmationNumber;
 
 class PurchaseTicketsTest extends TestCase
 {
@@ -42,13 +43,7 @@ class PurchaseTicketsTest extends TestCase
     public function a_customer_can_purchase_tickets_to_a_published_concert()
     {
 
-        $this->withoutExceptionHandling();
-
-        $orderConfirmationNumberGenerator = \Mockery::mock(OrderConfirmationNumberGenerator::class, [
-            'generate' => 'ORDERCONFIRMATION1234'
-        ] );
-
-        $this->app->instance(OrderConfirmationNumberGenerator::class, $orderConfirmationNumberGenerator);
+        OrderConfirmationNumber::shouldReceive('generate')->andReturn('ORDERCONFIRMATION1234');
 
         $concert = factory(Concert::class)->states('published')->create([
             'ticket_price' => 3250
@@ -62,12 +57,16 @@ class PurchaseTicketsTest extends TestCase
         
        
         $response->assertStatus(201)
-                ->assertJson([
-                    'confirmation_number' => 'ORDERCONFIRMATION1234',
-                    'email' => 'john@example.com',
-                    'ticket_quantity' => 3,
-                    'amount' => 9750
-                ]);
+            ->assertJson([
+                'confirmation_number' => 'ORDERCONFIRMATION1234',
+                'email' => 'john@example.com',
+                'amount' => 9750,
+                'tickets' => [
+                    ['code' => 'TICKETCODE1'],
+                    ['code' => 'TICKETCODE2'],
+                    ['code' => 'TICKETCODE3'],
+                ]
+            ]);
                 
         $this->assertEquals(9750, $this->paymentGateway->totalCharges());
         $this->assertTrue($concert->hasOrderFor('john@example.com'));
