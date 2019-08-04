@@ -19,15 +19,15 @@ class ReservationTest extends TestCase
     public function calculating_the_total_cost()
     {
             
-            $tickets = collect([
-                (object) ['price' => 1200],
-                (object) ['price' => 1200],
-                (object) ['price' => 1200]
-            ]);
+        $tickets = collect([
+            (object) ['price' => 1200],
+            (object) ['price' => 1200],
+            (object) ['price' => 1200]
+        ]);
 
-            $reservation = new Reservation($tickets, 'john@example.com');
+        $reservation = new Reservation($tickets, 'john@example.com');
 
-            $this->assertEquals(3600, $reservation->totalCost());
+        $this->assertEquals(3600, $reservation->totalCost());
 
     }
 
@@ -72,7 +72,6 @@ class ReservationTest extends TestCase
         foreach ($tickets as $ticket) {
             $ticket->shouldHaveReceived('release');
         }
-
 
    }
 

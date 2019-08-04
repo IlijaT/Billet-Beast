@@ -65,8 +65,8 @@ class FakePaymentGateway implements PaymentGateway
   private function lastCharge()
   {
       return array_first(\Stripe\Charge::all(
-          ["limit" => 1],
-          ['api_key' => $this->apiKey]
+            ["limit" => 1],
+            ['api_key' => $this->apiKey]
           )['data']);
   }
 }
