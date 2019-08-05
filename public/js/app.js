@@ -1790,7 +1790,6 @@ __webpack_require__.r(__webpack_exports__);
         payment_token: token.id
       }).then(function (response) {
         window.location = "/orders/".concat(response.data.confirmation_number);
-        console.log('Charge succeeded.');
       })["catch"](function (response) {
         _this.processing = false;
       });

@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use App\Order;
 use App\Facades\TicketCode;
 use Illuminate\Database\Eloquent\Model;
 
@@ -46,5 +47,10 @@ class Ticket extends Model
 
         $order->tickets()->save($this);
 
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

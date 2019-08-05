@@ -6,7 +6,7 @@
 		<div class="container">
 			<div class="constrain-xl m-xs-auto">
 				<div class="m-xs-b-6">
-					<div class="flex-baseline flex-spaced p-xs-y-4 border-b">
+					<div class="d-flex justify-content-between p-xs-y-4 border-b">
 						<h1 class="tex-xl">Order Summary</h1>
 					<a href="{{ url("/orders/{$order->confirmation_number}") }}" class="link-brand-soft">{{ $order->confirmation_number }}</a>
 					</div>
@@ -20,8 +20,8 @@
 				<div class="m-xs-b-7">
 					<h2 class="text-lg wt-normal m-xs-b-4">Your Tickets</h2>
 					@foreach ($order->tickets as $ticket)						
-						<div class="card m-xs-b-5">
-							<div class="card-section p-xs-y-3 flex-baseline flex-spaced text-light bg-gray">
+						<div class="card mb-5">
+							<div class="card-section p-2 p-xs-y-3 d-flex justify-content-between align-items-end text-light bg-dark">
 								<div>
 									<h1 class="text-xl wt-normal">{{ $ticket->concert->title }}</h1>
 									<p class="text-light-muted">{{ $ticket->concert->subtitle }}</p>
@@ -30,13 +30,13 @@
 									<strong>General Admission</strong>
 									<p class="text-light-soft">Admit One</p>
 								</div>
-							</div>o
-							<div class="card-section border-b">
+							</div>
+							<div class="card-section border-b p-2">
 								<div class="row">
 									<div class="col-sm">
 										<div class="media-object">
 											<div class="media-left">
-												@icon('calendar', 'text-brand-muted')
+												<i class="far fa-calendar-alt"></i>
 											</div>
 											<div class="media-body p-xs-l-4">
 												<p class="wt-bold">
@@ -51,7 +51,7 @@
 									<div class="col-sm">
 										<div class="media-object">
 											<div class="media-left">
-												@icon('location', 'text-brand-muted')
+												<i class="fas fa-location-arrow"></i>
 											</div>
 											<div class="media-body p-xs-l-4">
 												<p class="wt-bold">{{ $ticket->concert->venue }}</p>
@@ -64,9 +64,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="card-section flex-baseline flex-spaced">
+							<div class="card-section d-flex justify-content-between p-2">
 								<p class="text-lg">{{ $ticket->code }}</p>
-								{{-- <p>{{ $ticket->order->email }}</p> --}}
+								<p>{{ $ticket->order->email }}</p>
 							</div>
 						</div>
 					@endforeach

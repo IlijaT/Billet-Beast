@@ -20,8 +20,6 @@ class Order extends Model
 
         $tickets->each->claimFor($order);
 
-        //$order->tickets()->saveMany($tickets);
-
         return $order;
     }
 

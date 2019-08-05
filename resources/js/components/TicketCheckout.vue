@@ -93,7 +93,6 @@
                     payment_token: token.id,
                 }).then(response => {
                     window.location =`/orders/${response.data.confirmation_number}`;
-                    console.log('Charge succeeded.') 
                 }).catch(response => {
                     this.processing = false
                 })
