@@ -4,12 +4,13 @@ namespace Tests\Feature;
 
 use App\Concert;
 use Tests\TestCase;
+use App\Facades\TicketCode;
 use App\Billing\PaymentGateway;
 use App\Billing\FakePaymentGateway;
+use App\Facades\OrderConfirmationNumber;
 use App\OrderConfirmationNumberGenerator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Facades\OrderConfirmationNumber;
 
 class PurchaseTicketsTest extends TestCase
 {
@@ -42,8 +43,9 @@ class PurchaseTicketsTest extends TestCase
 	/** @test */
     public function a_customer_can_purchase_tickets_to_a_published_concert()
     {
-
+        
         OrderConfirmationNumber::shouldReceive('generate')->andReturn('ORDERCONFIRMATION1234');
+        TicketCode::shouldReceive('generateFor')->andReturn('TICKETCODE1', 'TICKETCODE2', 'TICKETCODE3');
 
         $concert = factory(Concert::class)->states('published')->create([
             'ticket_price' => 3250
