@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">Log in</button>
-                @if($errors->any())
+                @if($errors)
                 <p class="text-center text-danger m-xs-t-2">
                     These credentials do not match our records.
                 </p>
