@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/', function () {
+  return "Laravel";
+});
+
+
 Route::get('/concerts/{concert}', 'ConcertsController@show');
 Route::post('/concerts/{concert}/orders', 'ConcertOrdersController@store');
 Route::get('/orders/{confirmationNumber}', 'OrdersController@show');
