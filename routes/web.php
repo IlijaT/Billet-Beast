@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/concerts/{concert}', 'ConcertsController@show');
+Route::get('/concerts/{concert}', 'ConcertsController@show')->name('concerts.show');
 Route::post('/concerts/{concert}/orders', 'ConcertOrdersController@store');
 Route::get('/orders/{confirmationNumber}', 'OrdersController@show');
 
@@ -28,3 +28,5 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('auth.logout');
 Route::group(['middleware' => 'auth'], function () {
   Route::get('/backstage/concerts/new', 'Backstage\ConcertsController@create');
 });
+
+Route::post('/backstage/concerts', 'Backstage\ConcertsController@store');
