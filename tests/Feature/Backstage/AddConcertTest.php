@@ -74,4 +74,28 @@ class AddConcertTest extends TestCase
             $this->assertEquals(75, $concert->ticketsRemaining());
         });
     }
+
+    /** @test */
+    public function guest_cannot_add_a_new_concert()
+    {
+
+        $response = $this->post('/backstage/concerts', [
+            'title' => 'No Warning',
+            'subtitle' => 'With Cruel Hand',
+            'additional_information' => 'Must be 19+',
+            'date'  => '2019-10-10',
+            'time'  => '8:00pm',
+            'venue' => 'The IT Arena',
+            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
+            'city'  => 'Novi Sad',
+            'state' => 'Srbija',
+            'zip' => '21000',
+            'ticket_price'  => '32.50',
+            'ticket_qunatity'  => '75',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $this->assertEquals(0, Concert::count());
+    }
 }
