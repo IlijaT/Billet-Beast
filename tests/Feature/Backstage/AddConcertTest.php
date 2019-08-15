@@ -13,6 +13,24 @@ class AddConcertTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function validParams($overrides = [])
+    {
+        return array_merge([
+            'title' => 'No Warning',
+            'subtitle' => 'With Cruel Hand',
+            'additional_information' => 'Must be 19+',
+            'date'  => '2019-10-10',
+            'time'  => '8:00pm',
+            'venue' => 'The IT Arena',
+            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
+            'city'  => 'Novi Sad',
+            'state' => 'Srbija',
+            'zip' => '21000',
+            'ticket_price'  => '32.50',
+            'ticket_qunatity'  => '75',
+        ], $overrides);
+    }
+
     public function from($url)
     {
         session()->setPreviousUrl(url($url));
@@ -44,7 +62,6 @@ class AddConcertTest extends TestCase
     /** @test */
     public function adding_a_valid_concert()
     {
-        $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
 
@@ -86,20 +103,7 @@ class AddConcertTest extends TestCase
     public function guest_cannot_add_a_new_concert()
     {
 
-        $response = $this->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->post('/backstage/concerts', $this->validParams());
 
         $response->assertStatus(302);
         $response->assertRedirect("/login");
@@ -112,20 +116,7 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => '',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams(['title' => '']));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -139,20 +130,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'venue' => '',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -166,20 +146,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'venue_address'  => '',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -193,20 +162,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'city'  => '',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -220,20 +178,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => '',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
+            'state'  => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -247,20 +194,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
+            'zip'  => '',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -275,37 +211,16 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => '',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams([
+            'subtitle'  => '',
+        ]));
 
         tap(Concert::first(), function ($concert) use ($response) {
             $response->assertStatus(302);
 
             $response->assertRedirect("/concerts/{$concert->id}");
 
-            $this->assertEquals('No Warning', $concert->title);
             $this->assertNull($concert->subtitle);
-            $this->assertEquals('Must be 19+', $concert->additional_information);
-            $this->assertEquals(Carbon::parse('2019-10-10 8:00pm'), $concert->date);
-            $this->assertEquals('The IT Arena', $concert->venue);
-            $this->assertEquals('Bulevar Ilije Tatalovica 35', $concert->venue_address);
-            $this->assertEquals('Novi Sad', $concert->city);
-            $this->assertEquals('Srbija', $concert->state);
-            $this->assertEquals('21000', $concert->zip);
-            $this->assertEquals(3250, $concert->ticket_price);
-            $this->assertEquals(75, $concert->ticketsRemaining());
         });
     }
 
@@ -316,37 +231,16 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => '',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams([
+            'additional_information'  => '',
+        ]));
 
         tap(Concert::first(), function ($concert) use ($response) {
             $response->assertStatus(302);
 
             $response->assertRedirect("/concerts/{$concert->id}");
 
-            $this->assertEquals('No Warning', $concert->title);
-            $this->assertEquals('With Cruel Hand', $concert->subtitle);
             $this->assertNull($concert->additional_information);
-            $this->assertEquals(Carbon::parse('2019-10-10 8:00pm'), $concert->date);
-            $this->assertEquals('The IT Arena', $concert->venue);
-            $this->assertEquals('Bulevar Ilije Tatalovica 35', $concert->venue_address);
-            $this->assertEquals('Novi Sad', $concert->city);
-            $this->assertEquals('Srbija', $concert->state);
-            $this->assertEquals('21000', $concert->zip);
-            $this->assertEquals(3250, $concert->ticket_price);
-            $this->assertEquals(75, $concert->ticketsRemaining());
         });
     }
 
@@ -356,20 +250,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'date'  => 'not a valid date',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -383,24 +266,29 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => 'not valid time',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
-        ]);
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
+            'time'  => 'not a valid time',
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
         $response->assertSessionHasErrors('time');
+        $this->assertEquals(0, Concert::count());
+    }
+
+    /** @test */
+    public function ticket_price_is_required()
+    {
+
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
+            'ticket_price'  => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/new");
+        $response->assertSessionHasErrors('ticket_price');
         $this->assertEquals(0, Concert::count());
     }
 
@@ -410,20 +298,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'ticket_price'  => 'not numeric',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -437,24 +314,29 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'ticket_price'  => '4.99',
-            'ticket_qunatity'  => '75',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
         $response->assertSessionHasErrors('ticket_price');
+        $this->assertEquals(0, Concert::count());
+    }
+
+    /** @test */
+    public function ticket_qunatity_is_required()
+    {
+
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
+            'ticket_qunatity'  => '',
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/new");
+        $response->assertSessionHasErrors('ticket_qunatity');
         $this->assertEquals(0, Concert::count());
     }
 
@@ -464,20 +346,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'ticket_qunatity'  => 'not numeric',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
@@ -491,20 +362,9 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
-            'title' => 'No Warning',
-            'subtitle' => 'With Cruel Hand',
-            'additional_information' => 'Must be 19+',
-            'date'  => '2019-10-10',
-            'time'  => '8:00pm',
-            'venue' => 'The IT Arena',
-            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
-            'city'  => 'Novi Sad',
-            'state' => 'Srbija',
-            'zip' => '21000',
-            'ticket_price'  => '32.50',
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'ticket_qunatity'  => '0',
-        ]);
+        ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
