@@ -26,7 +26,7 @@ class PromoterLoginTest extends TestCase
             'password' => 'super-secret-password'
         ]);
 
-        $response->assertRedirect('/backstage/concerts/new');
+        $response->assertRedirect('/backstage/concerts');
         $this->assertTrue(Auth::check());
         $this->assertTrue(Auth::user()->is($user));
     }
@@ -47,8 +47,7 @@ class PromoterLoginTest extends TestCase
 
         $response->assertRedirect('/login');
         $response->assertSessionHas('email');
-        $this->assertTrue(session()->hasOldInput('email'));
-        $this->assertFalse(session()->hasOldInput('password'));
+
         $this->assertFalse(Auth::check());
     }
 

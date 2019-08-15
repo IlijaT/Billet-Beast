@@ -22,7 +22,7 @@
                         <span class="input-group-addon">
                             @icon('lock-closed', 'text-dark-muted text-xs')
                         </span>
-                        <input type="password" name="password" class="form-control" placeholder="Password">
+                        <input type="password" name="password" class="form-control" value="{{ old('password') }}" placeholder="Password">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">Log in</button>

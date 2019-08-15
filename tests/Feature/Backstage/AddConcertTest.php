@@ -62,6 +62,7 @@ class AddConcertTest extends TestCase
     /** @test */
     public function adding_a_valid_concert()
     {
+        $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
 
@@ -80,10 +81,12 @@ class AddConcertTest extends TestCase
             'ticket_qunatity'  => '75',
         ]);
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
 
             $response->assertRedirect("/concerts/{$concert->id}");
+
+            $this->assertTrue($concert->user->is($user));
 
             $this->assertEquals('No Warning', $concert->title);
             $this->assertEquals('With Cruel Hand', $concert->subtitle);
@@ -215,8 +218,10 @@ class AddConcertTest extends TestCase
             'subtitle'  => '',
         ]));
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
+
+            $this->assertTrue($concert->user->is($user));
 
             $response->assertRedirect("/concerts/{$concert->id}");
 
@@ -235,8 +240,10 @@ class AddConcertTest extends TestCase
             'additional_information'  => '',
         ]));
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
+
+            $this->assertTrue($concert->user->is($user));
 
             $response->assertRedirect("/concerts/{$concert->id}");
 

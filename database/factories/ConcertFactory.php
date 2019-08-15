@@ -2,6 +2,7 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
+use App\User;
 use App\Concert;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
@@ -12,20 +13,20 @@ $factory->define(Concert::class, function (Faker $faker) {
         'subtitle' => 'With Fake Openers',
         'date'  => Carbon::parse('+2 weeks'),
         'ticket_price'  => 2000,
-        'venue' => 'The Example Theatre', 
+        'venue' => 'The Example Theatre',
         'venue_address'  => 'Example Street 123',
         'city'  => 'Fakeville',
         'state' => 'Srbija',
         'zip' => '21000',
         'additional_information' => 'Some sample additinal information',
+        'user_id' => factory(User::class),
     ];
 });
 
 $factory->state(Concert::class, 'published', function ($faker) {
-    return [ 'published_at' => Carbon::now() ];
+    return ['published_at' => Carbon::now()];
 });
 
 $factory->state(Concert::class, 'unpublished', function ($faker) {
-    return [ 'published_at' => null ];
+    return ['published_at' => null];
 });
-
