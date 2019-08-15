@@ -13,6 +13,13 @@ class AddConcertTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function from($url)
+    {
+        session()->setPreviousUrl(url($url));
+
+        return $this;
+    }
+
     /** @test */
     public function promoters_can_view_add_concert_form()
     {
@@ -96,6 +103,33 @@ class AddConcertTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect("/login");
+        $this->assertEquals(0, Concert::count());
+    }
+
+    /** @test */
+    public function ttile_is_required()
+    {
+
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', [
+            'title' => '',
+            'subtitle' => 'With Cruel Hand',
+            'additional_information' => 'Must be 19+',
+            'date'  => '2019-10-10',
+            'time'  => '8:00pm',
+            'venue' => 'The IT Arena',
+            'venue_address'  => 'Bulevar Ilije Tatalovica 35',
+            'city'  => 'Novi Sad',
+            'state' => 'Srbija',
+            'zip' => '21000',
+            'ticket_price'  => '32.50',
+            'ticket_qunatity'  => '75',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/new");
+        $response->assertSessionHasErrors('title');
         $this->assertEquals(0, Concert::count());
     }
 }
