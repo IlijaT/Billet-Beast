@@ -2,16 +2,36 @@
 
 namespace Tests\Feature\Backstage;
 
-use App\Concert;
 use App\User;
+use App\Concert;
 use Tests\TestCase;
+use PHPUnit\Framework\Assert;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ViewConcertListingTest extends TestCase
 {
 
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        TestResponse::macro('data', function ($keys) {
+            return $this->original->getData()[$keys];
+        });
+
+        Collection::macro('assertContains', function ($value) {
+            return Assert::assertTrue($this->contains($value), 'Failed asserting that collection contained specified value');
+        });
+
+        Collection::macro('assertNotContains', function ($value) {
+            return Assert::assertFalse($this->contains($value), 'Failed asserting that collection did not contain specified value');
+        });
+    }
 
     /** @test */
     public function guest_cannot_view_promoters_concert_listing()
@@ -39,9 +59,9 @@ class ViewConcertListingTest extends TestCase
         $response = $this->actingAs($user)->get('/backstage/concerts');
         $response->assertStatus(200);
 
-        $this->assertTrue($response->original->getData()['concerts']->contains($concertA));
-        $this->assertTrue($response->original->getData()['concerts']->contains($concertB));
-        $this->assertTrue($response->original->getData()['concerts']->contains($concertD));
-        $this->assertFalse($response->original->getData()['concerts']->contains($concertC));
+        $response->data('concerts')->assertContains($concertA);
+        $response->data('concerts')->assertContains($concertB);
+        $response->data('concerts')->assertContains($concertD);
+        $response->data('concerts')->assertNotContains($concertC);
     }
 }
