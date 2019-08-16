@@ -47,6 +47,8 @@ class ConcertsController extends Controller
             'zip' => request('zip'),
         ])->addTickets(request('ticket_qunatity'));
 
+        $concert->publish();
+
         return redirect()->route('concerts.show', ['id' => $concert]);
     }
 }
