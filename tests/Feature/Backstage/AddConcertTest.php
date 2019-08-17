@@ -31,13 +31,6 @@ class AddConcertTest extends TestCase
         ], $overrides);
     }
 
-    public function from($url)
-    {
-        session()->setPreviousUrl(url($url));
-
-        return $this;
-    }
-
     /** @test */
     public function promoters_can_view_add_concert_form()
     {
@@ -116,7 +109,7 @@ class AddConcertTest extends TestCase
     }
 
     /** @test */
-    public function ttile_is_required()
+    public function title_is_required()
     {
 
         $user = factory(User::class)->create();
