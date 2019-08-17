@@ -113,7 +113,7 @@ class EditConcertTest extends TestCase
 
         $this->assertFalse($concert->isPublished());
 
-        $response = $this->ascingAs($user)->patch("/backstage/concerts/{$concert->id}", [
+        $response = $this->actingAs($user)->patch("/backstage/concerts/{$concert->id}", [
             'title' => 'New Title',
             'subtitle' => 'New Subtitle',
             'additional_information' => 'New additional information',
