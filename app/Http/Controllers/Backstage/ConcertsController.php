@@ -71,6 +71,10 @@ class ConcertsController extends Controller
     public function update($id)
     {
 
+        $concert = Auth::user()->concerts()->findOrFail($id);
+
+        abort_if($concert->isPublished(), 403);
+
         request()->validate([
             'title' => 'required',
             'venue' => 'required',
@@ -83,10 +87,6 @@ class ConcertsController extends Controller
             'ticket_price' => 'required|numeric|min:5',
             'ticket_quantity' => 'required|integer|min:1',
         ]);
-
-        $concert = Auth::user()->concerts()->findOrFail($id);
-
-        abort_if($concert->isPublished(), 403);
 
         $concert->update([
             'title' => request('title'),
