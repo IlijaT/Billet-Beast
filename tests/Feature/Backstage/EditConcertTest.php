@@ -27,6 +27,7 @@ class EditConcertTest extends TestCase
             'state' => 'Old State',
             'zip' => '00000',
             'ticket_price' => 2000,
+            'ticket_quantity' => 5,
         ], $overrides);
     }
 
@@ -147,6 +148,7 @@ class EditConcertTest extends TestCase
             'state' => 'New State',
             'zip' => '99999',
             'ticket_price'  => '72.50',
+            'ticket_quantity' => 10,
         ]);
 
         $response->assertRedirect('backstage/concerts');
@@ -162,6 +164,7 @@ class EditConcertTest extends TestCase
             $this->assertEquals('New State', $concert->state);
             $this->assertEquals('99999', $concert->zip);
             $this->assertEquals(7250, $concert->ticket_price);
+            $this->assertEquals(10, $concert->ticket_quantity);
         });
     }
 
@@ -494,5 +497,59 @@ class EditConcertTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
         $this->assertEquals(2000, $concert->fresh()->ticket_price);
+    }
+
+    /** @test */
+    public function ticket_quantity_price_is_required()
+    {
+        $user = factory(User::class)->create();
+        $concert = factory(Concert::class)->create($this->oldAttributes(['user_id' => $user]));
+
+        $response = $this->actingAs($user)
+            ->from("backstage/concerts/{$concert->id}/edit")
+            ->patch("backstage/concerts/{$concert->id}", $this->validParams(['ticket_quantity' => '']));
+
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+
+        $response->assertSessionHasErrors('ticket_quantity');
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+        $this->assertEquals(5, $concert->fresh()->ticket_quantity);
+    }
+
+    /** @test */
+    public function ticket_quantity_must_be_integer()
+    {
+        $user = factory(User::class)->create();
+        $concert = factory(Concert::class)->create($this->oldAttributes(['user_id' => $user]));
+
+        $response = $this->actingAs($user)
+            ->from("backstage/concerts/{$concert->id}/edit")
+            ->patch("backstage/concerts/{$concert->id}", $this->validParams(['ticket_quantity'  => '7.8']));
+
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+
+        $response->assertSessionHasErrors('ticket_quantity');
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+        $this->assertEquals(5, $concert->fresh()->ticket_quantity);
+    }
+
+    /** @test */
+    public function ticket_quantity_must_be_more_than_1()
+    {
+        $user = factory(User::class)->create();
+        $concert = factory(Concert::class)->create($this->oldAttributes(['user_id' => $user]));
+
+        $response = $this->actingAs($user)
+            ->from("backstage/concerts/{$concert->id}/edit")
+            ->patch("backstage/concerts/{$concert->id}", $this->validParams(['ticket_quantity'  => '0']));
+
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+
+        $response->assertSessionHasErrors('ticket_quantity');
+        $response->assertStatus(302);
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/edit");
+        $this->assertEquals(5, $concert->fresh()->ticket_quantity);
     }
 }
