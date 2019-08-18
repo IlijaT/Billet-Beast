@@ -16,23 +16,6 @@ class ViewConcertListingTest extends TestCase
 
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        TestResponse::macro('data', function ($keys) {
-            return $this->original->getData()[$keys];
-        });
-
-        Collection::macro('assertContains', function ($value) {
-            return Assert::assertTrue($this->contains($value), 'Failed asserting that collection contained specified value');
-        });
-
-        Collection::macro('assertNotContains', function ($value) {
-            return Assert::assertFalse($this->contains($value), 'Failed asserting that collection did not contain specified value');
-        });
-    }
-
     /** @test */
     public function guest_cannot_view_promoters_concert_listing()
     {

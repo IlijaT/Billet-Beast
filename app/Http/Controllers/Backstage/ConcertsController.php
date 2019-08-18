@@ -81,8 +81,6 @@ class ConcertsController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:g:ia',
             'ticket_price' => 'required|numeric|min:5',
-            'ticket_qunatity' => 'required|numeric|min:1',
-
         ]);
 
         $concert = Auth::user()->concerts()->findOrFail($id);

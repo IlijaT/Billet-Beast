@@ -2,11 +2,12 @@
 
 namespace Tests\Feature\Backstage;
 
-use App\Concert;
 use App\User;
+use App\Concert;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EditConcertTest extends TestCase
@@ -38,7 +39,7 @@ class EditConcertTest extends TestCase
 
         $this->assertFalse($concert->isPublished());
 
-        $response = $this->actingAs($user)->get("/backstage/concerts/{$concert->id}/ediit");
+        $response = $this->actingAs($user)->get("/backstage/concerts/{$concert->id}/edit");
 
         $response->assertStatus(200);
         $this->assertTrue($response->data('concert')->is($concert));
@@ -52,7 +53,7 @@ class EditConcertTest extends TestCase
 
         $this->assertTrue($concert->isPublished());
 
-        $response = $this->actingAs($user)->get("/backstage/concerts/{$concert->id}/ediit");
+        $response = $this->actingAs($user)->get("/backstage/concerts/{$concert->id}/edit");
 
         // 403 http response forbiden
         $response->assertStatus(403);
@@ -90,7 +91,7 @@ class EditConcertTest extends TestCase
         $user = factory(User::class)->create();
         $concert = factory(Concert::class)->states('published')->create(['user_id' => $user->id]);
 
-        $response = $this->get("/backstage/$concert->id/ediit");
+        $response = $this->get("/backstage/concerts/$concert->id/edit");
 
         // 302 http response - redirect 
         $response->assertStatus(302);
@@ -101,7 +102,7 @@ class EditConcertTest extends TestCase
     public function guest_are_ask_to_login_when_attempting_to_see_edit_form_of_concert_that_does_not_exist()
     {
 
-        $response = $this->get("/backstage/999/ediit");
+        $response = $this->get("/backstage/concerts/999/edit");
 
         // 302 http response - redirect 
         $response->assertStatus(302);
