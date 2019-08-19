@@ -32,8 +32,7 @@ class ConcertsController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:g:ia',
             'ticket_price' => 'required|numeric|min:5',
-            'ticket_qunatity' => 'required|numeric|min:1',
-
+            'ticket_quantity' => 'required|numeric|min:1',
         ]);
 
         $concert = Auth::user()->concerts()->create([
@@ -44,13 +43,14 @@ class ConcertsController extends Controller
                 request('date'),
                 request('time')
             ])),
-            'ticket_price'  => request('ticket_price') * 100,
             'venue' => request('venue'),
             'venue_address'  => request('venue_address'),
             'city'  => request('city'),
             'state' => request('state'),
             'zip' => request('zip'),
-        ])->addTickets(request('ticket_qunatity'));
+            'ticket_price'  => request('ticket_price') * 100,
+            'ticket_quantity'  => (int) request('ticket_quantity'),
+        ]);
 
         $concert->publish();
 

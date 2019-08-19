@@ -27,7 +27,7 @@ class AddConcertTest extends TestCase
             'state' => 'Srbija',
             'zip' => '21000',
             'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
+            'ticket_quantity'  => '75',
         ], $overrides);
     }
 
@@ -71,16 +71,13 @@ class AddConcertTest extends TestCase
             'state' => 'Srbija',
             'zip' => '21000',
             'ticket_price'  => '32.50',
-            'ticket_qunatity'  => '75',
+            'ticket_quantity'  => '75',
         ]);
 
         tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
-
             $response->assertRedirect("/concerts/{$concert->id}");
-
             $this->assertTrue($concert->user->is($user));
-
             $this->assertTrue($concert->isPublished());
 
             $this->assertEquals('No Warning', $concert->title);
@@ -93,6 +90,7 @@ class AddConcertTest extends TestCase
             $this->assertEquals('Srbija', $concert->state);
             $this->assertEquals('21000', $concert->zip);
             $this->assertEquals(3250, $concert->ticket_price);
+            $this->assertEquals(75, $concert->ticket_quantity);
             $this->assertEquals(75, $concert->ticketsRemaining());
         });
     }
@@ -327,50 +325,50 @@ class AddConcertTest extends TestCase
     }
 
     /** @test */
-    public function ticket_qunatity_is_required()
+    public function ticket_quantity_is_required()
     {
 
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
-            'ticket_qunatity'  => '',
+            'ticket_quantity'  => '',
         ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
-        $response->assertSessionHasErrors('ticket_qunatity');
+        $response->assertSessionHasErrors('ticket_quantity');
         $this->assertEquals(0, Concert::count());
     }
 
     /** @test */
-    public function ticket_qunatity_must_be_numeric()
+    public function ticket_quantity_must_be_numeric()
     {
 
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
-            'ticket_qunatity'  => 'not numeric',
+            'ticket_quantity'  => 'not numeric',
         ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
-        $response->assertSessionHasErrors('ticket_qunatity');
+        $response->assertSessionHasErrors('ticket_quantity');
         $this->assertEquals(0, Concert::count());
     }
 
     /** @test */
-    public function ticket_qunatity_must_be_at_least_1()
+    public function ticket_quantity_must_be_at_least_1()
     {
 
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
-            'ticket_qunatity'  => '0',
+            'ticket_quantity'  => '0',
         ]));
 
         $response->assertStatus(302);
         $response->assertRedirect("/backstage/concerts/new");
-        $response->assertSessionHasErrors('ticket_qunatity');
+        $response->assertSessionHasErrors('ticket_quantity');
         $this->assertEquals(0, Concert::count());
     }
 }
