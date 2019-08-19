@@ -18,14 +18,13 @@ class PurchaseTicketsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->paymentGateway = new FakePaymentGateway;
         app()->instance(PaymentGateway::class, $this->paymentGateway);
         Mail::fake();
-
     }
 
     private function orderTickets($concert, $params)
@@ -52,8 +51,11 @@ class PurchaseTicketsTest extends TestCase
         TicketCode::shouldReceive('generateFor')->andReturn('TICKETCODE1', 'TICKETCODE2', 'TICKETCODE3');
 
         $concert = factory(Concert::class)->states('published')->create([
-            'ticket_price' => 3250
-        ])->addTickets(3);
+            'ticket_price' => 3250,
+            'ticket_quantity' => 3
+        ]);
+
+        $concert->publish();
 
         $response = $this->orderTickets($concert, [
             'email' => 'john@example.com',
@@ -98,7 +100,6 @@ class PurchaseTicketsTest extends TestCase
         $response->assertStatus(404);
         $this->assertFalse($concert->hasOrderFor('john@example.com'));
         $this->assertEquals(0, $this->paymentGateway->totalCharges());
-
     }
 
     /** @test */
@@ -134,16 +135,15 @@ class PurchaseTicketsTest extends TestCase
         $this->assertFalse($concert->hasOrderFor('john@example.com'));
         $this->assertEquals(0, $this->paymentGateway->totalCharges());
         $this->assertEquals(50, $concert->ticketsRemaining());
-
     }
 
     /** @test */
     public function cannot_purchase_tickets_another_user_is_already_trying_to_purchase()
     {
         // Find tickets for Person A
-                                    // Find tickets for Person B *(should fail)
-                                    // Atempt to charge Person B
-                                    // Atempt to charge Person B
+        // Find tickets for Person B *(should fail)
+        // Atempt to charge Person B
+        // Atempt to charge Person B
         // Atempt to charge Person A
         // Atempt to charge Person A
 
@@ -173,7 +173,6 @@ class PurchaseTicketsTest extends TestCase
         $this->assertEquals(3600, $this->paymentGateway->totalCharges());
         $this->assertTrue($concert->hasOrderFor('personA@example.com'));
         $this->assertEquals(3, $concert->ordersFor('personA@example.com')->first()->ticketQuantity());
-
     }
 
     /** @test */
@@ -189,8 +188,6 @@ class PurchaseTicketsTest extends TestCase
         ]);
 
         $this->assertValidationError($response, 'email');
-
-
     }
 
     /** @test */
@@ -207,7 +204,6 @@ class PurchaseTicketsTest extends TestCase
         ]);
 
         $this->assertValidationError($response, 'email');
-
     }
 
     /** @test */
@@ -222,7 +218,6 @@ class PurchaseTicketsTest extends TestCase
         ]);
 
         $this->assertValidationError($response, 'ticket_quantity');
-
     }
 
     /** @test */
@@ -253,6 +248,4 @@ class PurchaseTicketsTest extends TestCase
 
         $this->assertValidationError($response, 'payment_token');
     }
-
-
 }
