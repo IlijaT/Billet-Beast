@@ -78,7 +78,7 @@ class AddConcertTest extends TestCase
             $response->assertStatus(302);
             $response->assertRedirect("/concerts/{$concert->id}");
             $this->assertTrue($concert->user->is($user));
-            $this->assertTrue($concert->isPublished());
+            $this->assertFalse($concert->isPublished());
 
             $this->assertEquals('No Warning', $concert->title);
             $this->assertEquals('With Cruel Hand', $concert->subtitle);
@@ -91,7 +91,7 @@ class AddConcertTest extends TestCase
             $this->assertEquals('21000', $concert->zip);
             $this->assertEquals(3250, $concert->ticket_price);
             $this->assertEquals(75, $concert->ticket_quantity);
-            $this->assertEquals(75, $concert->ticketsRemaining());
+            $this->assertEquals(0, $concert->ticketsRemaining());
         });
     }
 
