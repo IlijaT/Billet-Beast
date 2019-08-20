@@ -1,7 +1,7 @@
 @extends('layouts.backstage')
 
 @section('backstageContent')
-    {{-- <div class="bg-light p-xs-y-4 border-b">
+    <div class="bg-light p-xs-y-4 border-b">
         <div class="container">
             <div class="flex-spaced flex-y-center">
                 <h1 class="text-lg">Your concerts</h1>
@@ -78,5 +78,5 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
