@@ -8,10 +8,8 @@
             <h2 class="mb-2 text-lg">Overview</h2>
             <div class="card p-2">
                 <div class="card-section border-b">
-                        <p class="mb-4">This show is 55% sold out.</p>
-                        <progress class="progress" value="55" max="100">55</progress>
-                    {{-- <p class="mb-4">This show is {{ $concert->percentSoldOut() }}% sold out.</p> --}}
-                    {{-- <progress class="progress" value="{{ $concert->ticketsSold() }}" max="{{ $concert->totalTickets() }}">{{ $concert->percentSoldOut() }}</progress> --}}
+                    <p class="m-xs-b-4">This show is {{ $concert->percentSoldOut() }}% sold out.</p>
+                    <progress class="progress" value="{{ $concert->ticketsSold() }}" max="{{ $concert->totalTickets() }}">{{ $concert->percentSoldOut() }}</progress>
                 </div>
                 <div class="row">
                     <div class="col col-md-4 border-md-r">
