@@ -34,11 +34,11 @@ class ViewConcertListingTest extends TestCase
         $otherUser = factory(User::class)->create();
 
         $publishedConcertA = factory(Concert::class)->state('published')->create(['user_id' => $user->id]);
-        $publishedConcertB = factory(Concert::class)->state('published')->create(['user_id' => $otherUser->id]);
+        factory(Concert::class)->state('published')->create(['user_id' => $otherUser->id]);
         $publishedConcertC = factory(Concert::class)->state('published')->create(['user_id' => $user->id]);
 
         $unpublishedConcertA = factory(Concert::class)->state('unpublished')->create(['user_id' => $user->id]);
-        $unpublishedConcertB = factory(Concert::class)->state('unpublished')->create(['user_id' => $otherUser->id]);
+        factory(Concert::class)->state('unpublished')->create(['user_id' => $otherUser->id]);
         $unpublishedConcertC = factory(Concert::class)->state('unpublished')->create(['user_id' => $user->id]);
 
 
@@ -46,18 +46,14 @@ class ViewConcertListingTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->data('publishedConcerts')->assertContains($publishedConcertA);
-        $response->data('publishedConcerts')->assertNotContains($publishedConcertB);
-        $response->data('publishedConcerts')->assertContains($publishedConcertC);
-        $response->data('publishedConcerts')->assertNotContains($unpublishedConcertA);
-        $response->data('publishedConcerts')->assertNotContains($unpublishedConcertB);
-        $response->data('publishedConcerts')->assertNotContains($unpublishedConcertC);
+        $response->data('publishedConcerts')->assertEquals([
+            $publishedConcertA,
+            $publishedConcertC
+        ]);
 
-        $response->data('unpublishedConcerts')->assertContains($unpublishedConcertA);
-        $response->data('unpublishedConcerts')->assertNotContains($unpublishedConcertB);
-        $response->data('unpublishedConcerts')->assertContains($unpublishedConcertC);
-        $response->data('unpublishedConcerts')->assertNotContains($publishedConcertA);
-        $response->data('unpublishedConcerts')->assertNotContains($publishedConcertB);
-        $response->data('unpublishedConcerts')->assertNotContains($publishedConcertC);
+        $response->data('unpublishedConcerts')->assertEquals([
+            $unpublishedConcertA,
+            $unpublishedConcertC
+        ]);
     }
 }

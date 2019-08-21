@@ -26,6 +26,15 @@ abstract class TestCase extends BaseTestCase
         Collection::macro('assertNotContains', function ($value) {
             return Assert::assertFalse($this->contains($value), 'Failed asserting that collection did not contain specified value');
         });
+
+        Collection::macro('assertEquals', function ($items) {
+            Assert::assertEquals(count($this), count($items));
+            $this->zip($items)->each(function ($pair) {
+
+                list($a, $b) = $pair;
+                return Assert::assertTrue($a->is($b));
+            });
+        });
     }
 
     public function from($url)
