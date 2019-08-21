@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
     protected $guarded = [];
-    
+
     public function scopeAvailable($query)
     {
         return $query->whereNull('order_id')->whereNull('reserved_at');
     }
+
+    public function scopeSold($query)
+    {
+        return $query->whereNotNull('order_id');
+    }
+
 
     public function release()
     {
@@ -26,7 +32,6 @@ class Ticket extends Model
     public function concert()
     {
         return $this->belongsTo(Concert::class);
-
     }
 
     public function getPriceAttribute()
@@ -46,7 +51,6 @@ class Ticket extends Model
         $this->code = TicketCode::generateFor($this);
 
         $order->tickets()->save($this);
-
     }
 
     public function order()
