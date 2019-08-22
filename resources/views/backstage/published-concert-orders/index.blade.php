@@ -54,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach($orders as $order)
+                            @foreach($orders as $order)
                                 <tr>
                                     <td>{{ $order->email }}</td>
                                     <td>{{ $order->ticketQuantity() }}</td>
@@ -62,7 +62,7 @@
                                     <td><span class="text-dark-soft">****</span> {{ $order->card_last_four }}</td>
                                     <td class="text-dark-soft">{{ $order->formatted_date }}</td>
                                 </tr>
-                            @endforeach --}}
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
