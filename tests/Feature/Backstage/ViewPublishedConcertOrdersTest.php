@@ -5,6 +5,8 @@ namespace Tests\Feature\Backstage;
 use App\User;
 use App\Concert;
 use Tests\TestCase;
+use App\OrderFactory;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -22,6 +24,7 @@ class ViewPublishedConcertOrdersTest extends TestCase
         $concert = factory(Concert::class)->create(['user_id' => $user->id]);
         $concert->publish();
 
+        $order = OrderFactory::creatForConcert($concert, ['created_at' => Carbon::parse('11 days ago')]);
 
         $response = $this->actingAs($user)->get("backstage/published-concerts/{$concert->id}/orders");
 
