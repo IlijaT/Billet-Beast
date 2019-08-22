@@ -10,26 +10,24 @@
                 <div class="form-group">
                     <label class="form-label pseudo-hidden">Email address</label>
                     <div class="input-group">
-                        <span class="input-group-addon">
-                            @icon('user', 'text-dark-muted text-xs')
-                        </span>
                         <input type="email" name="email" class="form-control" placeholder="Email address" value="{{ old('email') }}">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label pseudo-hidden">Password</label>
                     <div class="input-group">
-                        <span class="input-group-addon">
-                            @icon('lock-closed', 'text-dark-muted text-xs')
-                        </span>
                         <input type="password" name="password" class="form-control" value="{{ old('password') }}" placeholder="Password">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">Log in</button>
-                @if($errors)
-                <p class="text-center text-danger m-xs-t-2">
-                    These credentials do not match our records.
-                </p>
+                @if(count($errors))
+                <div class="alert alert-danger">
+                  @foreach($errors->all() as $error)
+                    <li>
+                      {{ $error }}
+                    </li>
+                  @endforeach
+                </div>
                 @endif
             </form>
         </div>

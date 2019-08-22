@@ -9,7 +9,7 @@
             <div class="card p-2">
                 <div class="card-section border-b">
                     <p class="m-xs-b-4">This show is {{ $concert->percentSoldOut() }}% sold out.</p>
-                    <progress class="progress" value="{{ $concert->ticketsSold() }}" max="{{ $concert->totalTickets() }}">{{ $concert->percentSoldOut() }}</progress>
+                    <progress  class="progress" value="{{ $concert->ticketsSold() }}" max="{{ $concert->totalTickets() }}">{{ $concert->percentSoldOut() }}</progress>
                 </div>
                 <div class="row">
                     <div class="col col-md-4 border-md-r">
@@ -32,8 +32,7 @@
                         <div class="card-section pl-md-2 text-center text-md-left">
                             <h3 class="text-base wt-normal mb-1">Total Revenue</h3>
                             <div class="text-jumbo wt-bold">
-                                333 dollars
-                                {{-- ${{ $concert->revenueInDollars() }} --}}
+                                ${{ $concert->revenueInDollars() }}
                             </div>
                         </div>
                     </div>
