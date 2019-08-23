@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Backstage;
 
+use App\AttendeeMessage;
 use App\Concert;
 use App\User;
 use Tests\TestCase;
@@ -54,5 +55,28 @@ class MessageAttendeesTest extends TestCase
         $response = $this->get("/backstage/concerts/{$concert->id}/messages/new");
 
         $response->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function a_promoter_can_send_new_message()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+        $concert = factory(Concert::class)->create(['user_id' => $user->id]);
+        $concert->publish();
+
+        $response = $this->actingAs($user)->post("/backstage/concerts/{$concert->id}/messages", [
+            'subject' => 'My subject',
+            'message' => 'My message'
+        ]);
+
+        $response->assertRedirect("/backstage/concerts/{$concert->id}/messages/new");
+        $response->assertSessionHas('flash');
+
+        $message = AttendeeMessage::first();
+        $this->assertEquals($concert->id, $message->concert_id);
+        $this->assertEquals('My subject', $message->subject);
+        $this->assertEquals('My message', $message->message);
     }
 }

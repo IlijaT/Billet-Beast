@@ -10,10 +10,17 @@ class ConcertMessagesController extends Controller
 {
     public function create($concertId)
     {
-        $concert = Auth::user()->concerts()->published()->findOrFail($concertId);
+        $concert = Auth::user()->concerts()->findOrFail($concertId);
+        return view('backstage.concert-messages.create', ['concert' => $concert]);
+    }
 
-        return view('backstage.concert-messages.create', [
-            'concert' => $concert
-        ]);
+    public function store($concertId)
+    {
+        $concert = Auth::user()->concerts()->findOrFail($concertId);
+
+        $message = $concert->attendeeMessages()->create(request(['subject', 'message']));
+
+        return redirect()->route('backstage.concert-messages.create', ['concert' => $concert])
+            ->with('flash', 'Your message has been sent.');
     }
 }
