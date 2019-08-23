@@ -14,9 +14,23 @@ class ViewPublishedConcertOrdersTest extends TestCase
 {
     use RefreshDatabase;
 
-
     /** @test */
     public function a_promoter_can_view_the_orders_of_their_own_published_concert()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+        $concert = factory(Concert::class)->create(['user_id' => $user->id]);
+        $concert->publish();
+
+        $response = $this->actingAs($user)->get("backstage/published-concerts/{$concert->id}/orders");
+
+        $response->assertStatus(200);
+        $this->assertTrue($response->data('concert')->is($concert));
+    }
+
+    /** @test */
+    public function a_promoter_can_view_the_10_most_recent_orders_for_their_concert()
     {
         $this->withoutExceptionHandling();
 
@@ -38,11 +52,6 @@ class ViewPublishedConcertOrdersTest extends TestCase
 
         $response = $this->actingAs($user)->get("backstage/published-concerts/{$concert->id}/orders");
 
-        $response->assertStatus(200);
-
-
-        $this->assertTrue($response->data('concert')->is($concert));
-
         $response->data('orders')->assertNotContains($oldOrder);
         $response->data('orders')->assertEquals([
             $recentOrder10,
@@ -57,7 +66,6 @@ class ViewPublishedConcertOrdersTest extends TestCase
             $recentOrder1
         ]);
     }
-
     /** @test */
     public function a_promoter_cannot_view_the_orders_of_unpublished_concert()
     {
