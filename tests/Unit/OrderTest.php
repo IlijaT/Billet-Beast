@@ -22,9 +22,9 @@ class OrderTest extends TestCase
 
         $charge = new Charge(['amount' => 3600, 'card_last_four' => '1234']);
         $tickets = collect([
-            \Mockery::spy(Ticket::class),  
-            \Mockery::spy(Ticket::class),  
-            \Mockery::spy(Ticket::class),  
+            \Mockery::spy(Ticket::class),
+            \Mockery::spy(Ticket::class),
+            \Mockery::spy(Ticket::class),
         ]);
 
         $order = Order::forTickets($tickets, 'john@example.com', $charge);
@@ -33,7 +33,6 @@ class OrderTest extends TestCase
         $this->assertEquals(3600, $order->amount);
         $this->assertEquals('1234', $order->card_last_four);
         $tickets->each->shouldHaveReceived('claimFor', [$order]);
-
     }
 
     /** @test */
@@ -51,21 +50,14 @@ class OrderTest extends TestCase
     /** @test */
     public function retrieving_a_nonexisting_order_by_confirmation_number_throws_exception()
     {
-       try {
-            Order::findByConfirmationNumber('NONEXISTINGCONFIRMATIONNUMBER');
-       } catch(ModelNotFoundException $e) {
-            return;
-       }
-
-       $this->fail('No matching Order was found for the specific confirmation number, but 
-       exception has not been thrown!');
- 
+        $this->expectException(ModelNotFoundException::class);
+        Order::findByConfirmationNumber('NONEXISTINGCONFIRMATIONNUMBER');
     }
 
     /** @test */
     public function converting_to_an_array()
     {
-     
+
         $order = factory(Order::class)->create([
             'confirmation_number' => 'ORDERCONFIRMATION1234',
             'email' => 'jane@example.com',
@@ -76,7 +68,7 @@ class OrderTest extends TestCase
             factory(Ticket::class)->create(['code' => 'TICKETCODE1']),
             factory(Ticket::class)->create(['code' => 'TICKETCODE2']),
             factory(Ticket::class)->create(['code' => 'TICKETCODE3']),
-            ]);
+        ]);
 
         $result = $order->toArray();
 
@@ -91,5 +83,4 @@ class OrderTest extends TestCase
             ]
         ], $result);
     }
-
 }
