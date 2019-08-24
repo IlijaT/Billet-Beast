@@ -20,7 +20,7 @@ $factory->define(Concert::class, function (Faker $faker) {
         'zip' => '21000',
         'user_id' => factory(User::class),
         'ticket_price'  => 2000,
-        'ticket_quantity'  => 5,
+        'ticket_quantity'  => 10,
     ];
 });
 
