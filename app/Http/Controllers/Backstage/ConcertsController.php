@@ -35,6 +35,7 @@ class ConcertsController extends Controller
             'time' => 'required|date_format:g:ia',
             'ticket_price' => 'required|numeric|min:5',
             'ticket_quantity' => 'required|numeric|min:1',
+            'poster_image' => 'image|dimensions:min_width=400|dimensions:ratio=8.5/11'
         ]);
 
         $concert = Auth::user()->concerts()->create([
