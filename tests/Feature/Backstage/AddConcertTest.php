@@ -382,7 +382,7 @@ class AddConcertTest extends TestCase
         Storage::fake('s3');
 
         $user = factory(User::class)->create();
-        $file = File::image('concert-poster.png', 850, 11000);
+        $file = File::image('concert-poster.png', 850, 1100);
 
         $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams([
             'poster_image'  => $file,
@@ -453,5 +453,25 @@ class AddConcertTest extends TestCase
         $response->assertRedirect("/backstage/concerts/new");
         $response->assertSessionHasErrors('poster_image');
         $this->assertEquals(0, Concert::count());
+    }
+
+    /** @test */
+    public function poster_image_is_optional()
+    {
+
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams([
+            'poster_image'  => null,
+        ]));
+
+        tap(Concert::first(), function ($concert) use ($response, $user) {
+            $response->assertStatus(302);
+            $this->assertTrue($concert->user->is($user));
+            $response->assertRedirect("/concerts/{$concert->id}");
+            $this->assertNull($concert->poster_image_path);
+        });
     }
 }

@@ -35,7 +35,7 @@ class ConcertsController extends Controller
             'time' => 'required|date_format:g:ia',
             'ticket_price' => 'required|numeric|min:5',
             'ticket_quantity' => 'required|numeric|min:1',
-            'poster_image' => 'image|dimensions:min_width=400|dimensions:ratio=8.5/11'
+            'poster_image' => 'nullable|image|dimensions:min_width=400|dimensions:ratio=8.5/11'
         ]);
 
         $concert = Auth::user()->concerts()->create([
@@ -53,7 +53,7 @@ class ConcertsController extends Controller
             'zip' => request('zip'),
             'ticket_price'  => request('ticket_price') * 100,
             'ticket_quantity'  => (int) request('ticket_quantity'),
-            'poster_image_path'  => request('poster_image')->store('posters', 's3'),
+            'poster_image_path'  => request()->hasFile('poster_image') ? request('poster_image')->store('posters', 's3') : null,
         ]);
 
         return redirect()->route('concerts.show', ['id' => $concert]);
