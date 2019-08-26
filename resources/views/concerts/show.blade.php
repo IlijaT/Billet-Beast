@@ -3,12 +3,11 @@
 @section('content')
 <div class="bg-soft p-xs-y-7 full-height">
     <div class="container">
-        {{-- @if ($concert->hasPoster())
+        @if ($concert->hasPoster())
             @include('concerts.partials.card-with-poster', ['concert' => $concert])
         @else
             @include('concerts.partials.card-no-poster', ['concert' => $concert])
-        @endif --}}
-        @include('concerts.partials.card-no-poster', ['concert' => $concert])
+        @endif
     </div>
 </div>
 @endsection

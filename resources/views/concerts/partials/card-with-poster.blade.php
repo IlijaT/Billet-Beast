@@ -4,7 +4,8 @@
             <div class="row flex-fit">
                 <div class="col col-lg-6 hidden-md-down p-xs-0 p-xs-l-4">
                     <div class="card-section">
-                        <img src="{{ $concert->posterUrl() }}" class="img-fit" alt="">
+                        {{-- <img src="{{ $concert->posterUrl() }}" class="img-fit" alt=""> --}}
+                        <img src="{{ asset("storage/{$concert->poster_image_path}") }}" class="img-fit" alt="">
                     </div>
                 </div>
                 <div class="col col-xs-12 col-lg-6">

@@ -53,10 +53,10 @@ class ConcertsController extends Controller
             'zip' => request('zip'),
             'ticket_price'  => request('ticket_price') * 100,
             'ticket_quantity'  => (int) request('ticket_quantity'),
-            'poster_image_path'  => request()->hasFile('poster_image') ? request('poster_image')->store('posters', 's3') : null,
+            'poster_image_path'  => request()->hasFile('poster_image') ? request('poster_image')->store('posters', 'public') : null,
         ]);
 
-        return redirect()->route('concerts.show', ['id' => $concert]);
+        return redirect()->route('backstage.concerts.index');
     }
 
     public function edit($id)
