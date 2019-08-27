@@ -33,6 +33,9 @@ class ProcessPosterImageTest extends TestCase
         list($width, $height) = getimagesizefromstring($resizedImage);
         $this->assertEquals(600, $width);
         $this->assertEquals(776, $height);
+
+        $controlImageContents =  file_get_contents(base_path('tests/_fixtures_/optimized-poster.png'));
+        $this->assertEquals($controlImageContents, $resizedImage);
     }
 
     /** @test */
@@ -54,5 +57,9 @@ class ProcessPosterImageTest extends TestCase
         $optimizedImageSize = Storage::disk('public')->size('posters/example-poster.png');
         $originalImageSize = filesize(base_path('tests/_fixtures_/small-unoptimized-poster.png'));
         $this->assertLessThan($originalImageSize, $optimizedImageSize);
+
+        $optimizedImageContents = Storage::disk('public')->get('posters/example-poster.png');
+        $controlImageContents =  file_get_contents(base_path('tests/_fixtures_/optimized-poster.png'));
+        $this->assertEquals($controlImageContents, $optimizedImageContents);
     }
 }
