@@ -375,8 +375,8 @@ class AddConcertTest extends TestCase
     /** @test */
     public function poster_image_is_uploaded_if_included()
     {
-        $this->withoutExceptionHandling();
 
+        Event::fake(ConcertAdded::class);
         Storage::fake('public');
 
         $user = factory(User::class)->create();
@@ -404,7 +404,6 @@ class AddConcertTest extends TestCase
         $user = factory(User::class)->create();
         $file = File::create('not-a-poster.pdf');
 
-
         $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'poster_image'  => $file,
         ]));
@@ -422,7 +421,6 @@ class AddConcertTest extends TestCase
 
         $user = factory(User::class)->create();
         $file = File::image('concert-poster.png', 399, 516);
-
 
         $response = $this->actingAs($user)->from('/backstage/concerts/new')->post('/backstage/concerts', $this->validParams([
             'poster_image'  => $file,
@@ -456,8 +454,6 @@ class AddConcertTest extends TestCase
     public function poster_image_is_optional()
     {
 
-        $this->withoutExceptionHandling();
-
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams([
@@ -475,13 +471,12 @@ class AddConcertTest extends TestCase
     /** @test */
     public function an_event_is_fired_when_concert_is_added()
     {
-        $this->withoutExceptionHandling();
 
         Event::fake([ConcertAdded::class]);
 
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->post('/backstage/concerts', $this->validParams());
+        $this->actingAs($user)->post('/backstage/concerts', $this->validParams());
 
         Event::assertDispatched(ConcertAdded::class, function ($event) {
             $concert = Concert::firstOrFail();
