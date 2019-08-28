@@ -2,23 +2,6 @@
 
 @section('content')
 <div class="full-height bg-soft flex-col">
-    <header>
-        <nav class="navbar p-xs-y-3">
-            <div class="container">
-                <div class="navbar-content">
-                    <div>
-                        <img src="/img/logo.svg" alt="TicketBeast" style="height: 2.5rem;">
-                    </div>
-                    <div>
-                        <form class="inline-block" action="{{ route('auth.logout') }}" method="POST">
-                            {{ csrf_field() }}
-                            <button type="submit" class="link link-light">Log out</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
 
     <div class="flex">
         @yield('backstageContent')
