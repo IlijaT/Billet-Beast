@@ -7,7 +7,7 @@
 				<form class="card p-xs-6" action="/register" method="POST">
 					{{ csrf_field() }}
 					<input type="hidden" name="invitation_code" value="{{ $invitation->code }}">
-					<h1 class="text-xl wt-light text-center m-xs-b-6">Join Ticketbeast</h1>
+					<h1 class="text-xl wt-light text-center m-xs-b-6">Join BilletBeast</h1>
 					<div class="form-group {{ $errors->first('email', 'has-error') }}">
 						<label class="form-label pseudo-hidden">Email address</label>
 						<div class="input-group">
