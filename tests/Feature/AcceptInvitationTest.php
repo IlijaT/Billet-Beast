@@ -31,7 +31,7 @@ class AcceptInvitationTest extends TestCase
     }
 
     /** @test */
-    public function viewing_an_used_invitation()
+    public function viewing_a_used_invitation()
     {
 
         factory(Invitation::class)->create([
@@ -54,7 +54,7 @@ class AcceptInvitationTest extends TestCase
     }
 
     /** @test */
-    public function registering_with_a_walid_invitation_code()
+    public function registering_with_a_valid_invitation_code()
     {
         $this->withoutExceptionHandling();
 
@@ -77,5 +77,40 @@ class AcceptInvitationTest extends TestCase
         $this->assertEquals('jane@example.com', $user->email);
         $this->assertTrue(Hash::check('secret', $user->password));
         $this->assertTrue($invitation->fresh()->user->is($user));
+    }
+
+    /** @test */
+    public function registering_with_a_used_invitation_code()
+    {
+
+        factory(Invitation::class)->create([
+            'user_id' => factory(User::class)->create(),
+            'code' => 'TESTCODE1234'
+        ]);
+
+        $this->assertEquals(1, User::count());
+
+        $response = $this->post('/register', [
+            'invitation_code' => 'TESTCODE1234',
+            'email' => 'jane@example.com',
+            'password' => 'secret'
+        ]);
+
+        $response->assertStatus(404);
+        $this->assertEquals(1, User::count());
+    }
+
+    /** @test */
+    public function registering_with_a_invitation_code_that_does_not_exist()
+    {
+
+        $response = $this->post('/register', [
+            'invitation_code' => 'TESTCODE1234',
+            'email' => 'jane@example.com',
+            'password' => 'secret'
+        ]);
+
+        $response->assertStatus(404);
+        $this->assertEquals(0, User::count());
     }
 }
