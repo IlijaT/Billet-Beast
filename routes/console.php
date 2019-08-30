@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Artisan::command('invite-promoter {email}', function ($email) {
-    $invitation = Invitation::create([
+    Invitation::create([
         'code' => InvitationCode::generate(),
         'email' => $email
     ])->send();
