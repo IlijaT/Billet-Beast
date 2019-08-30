@@ -1,8 +1,10 @@
 <?php
 
-use App\Facades\InvitationCode;
 use App\Invitation;
+use App\Mail\InvitationEmail;
+use App\Facades\InvitationCode;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +21,5 @@ Artisan::command('invite-promoter {email}', function ($email) {
     $invitation = Invitation::create([
         'code' => InvitationCode::generate(),
         'email' => $email
-    ]);
+    ])->send();
 })->describe('Invite a new promoter to create an account.');
